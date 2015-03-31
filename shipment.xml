@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!-- The COPYRIGHT file at the top level of this repository contains the full
+copyright notices and license terms. -->
+<tryton>
+    <data>
+        <record model="ir.ui.view"
+                id="stock_shipment_out_assign_wizard_start_view_form">
+            <field name="model">stock.shipment.out.assign.wizard.start</field>
+            <field name="type">form</field>
+            <field name="name">stock_shipment_out_assign_wizard_form</field>
+        </record>
+        <record model="ir.action.wizard"
+                id="stock_shipment_out_assign_wizard">
+            <field name="name">Try Assign Shipments Out Wizard</field>
+            <field name="wiz_name">stock.shipment.out.assign.wizard</field>
+        </record>
+        <menuitem
+            parent="stock.menu_shipment_out_form"
+            action="stock_shipment_out_assign_wizard"
+            id="menu_stock_shipment_out_assign"/>
+
+        <record model="ir.cron" id="cron_shipment_out_assign_try_scheduler">
+            <field name="name">Shipment Out Assign Try Scheduler</field>
+            <field name="request_user" ref="res.user_admin"/>
+            <field name="user" ref="res.user_trigger"/>
+            <field name="active" eval="True"/>
+            <field name="interval_number" eval="1"/>
+            <field name="interval_type">hours</field>
+            <field name="number_calls" eval="-1"/>
+            <field name="repeat_missed" eval="False"/>
+            <field name="model">stock.shipment.out</field>
+            <field name="function">assign_try_scheduler</field>
+        </record>
+    </data>
+</tryton>
