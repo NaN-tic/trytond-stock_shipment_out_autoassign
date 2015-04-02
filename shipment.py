@@ -20,7 +20,7 @@ class ShipmentOut:
         This method is intended to be called from ir.cron
         '''
         shipments = cls.search([
-                ('state', 'in', ['draft', 'waiting']),
+                ('state', 'in', ['waiting']),
                 ])
         cls.assign_try(shipments)
 
@@ -30,7 +30,7 @@ class ShipmentOutAssignWizardStart(ModelView):
     __name__ = 'stock.shipment.out.assign.wizard.start'
     shipments = fields.Many2Many('stock.shipment.out', None, None, 'Shipments',
         domain=[
-            ('state', 'in', ['draft', 'waiting']),
+            ('state', 'in', ['waiting']),
             ],
         help='Select output shipments to trying to assign them.')
 
@@ -38,7 +38,7 @@ class ShipmentOutAssignWizardStart(ModelView):
     def default_shipments():
         ShipmentOut = Pool().get('stock.shipment.out')
         shipments = ShipmentOut.search([
-                ('state', 'in', ['draft', 'waiting']),
+                ('state', 'in', ['waiting']),
                 ])
         return [w.id for w in shipments]
 
@@ -57,7 +57,6 @@ class ShipmentOutAssignWizard(Wizard):
     def do_assign(self, action):
         ShipmentOut = Pool().get('stock.shipment.out')
         shipments = self.start.shipments
-        ShipmentOut.wait(shipments)
         ShipmentOut.assign_try(shipments)
 
         action['pyson_domain'] = PYSONEncoder().encode([
