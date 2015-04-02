@@ -1,4 +1,5 @@
-Stock Lot Autoassign Module
+Stock Out Autoassign Module
 ###########################
 
-The Stock Lot Autoassign module assign automatically lot when assign shipments.
+The Stock Out Autoassign module assigns automatically out shipments in waiting
+state with a wizard or with a scheduled action.

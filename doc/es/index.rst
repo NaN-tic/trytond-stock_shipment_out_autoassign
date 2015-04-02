@@ -1,9 +1,6 @@
-=================================
-Stock. Asignar lotes en albaranes
-=================================
+=========================================
+Stock. Reservar albaranes automáticamente
+=========================================
 
-El módulo "Asignar lotes en albaranes" le asignará un lote en los movimientos
-de un albarán cuando un albarán se reserva.
-
-Para que el el movimiento de stock añade un lote, en el producto, se debe añadir
-los tipos de lote que será requerido.
+Permite reservar automáticamente albaranes de salida en estado "En espera",
+bien ejecutando un asistente, bien mediante una acción planificada.
