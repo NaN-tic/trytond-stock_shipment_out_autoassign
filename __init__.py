@@ -8,7 +8,7 @@ def register():
     Pool.register(
         ShipmentOut,
         ShipmentOutAssignWizardStart,
-        module='stock_out_autoassign', type_='model')
+        module='stock_shipment_out_autoassign', type_='model')
     Pool.register(
         ShipmentOutAssignWizard,
-        module='stock_out_autoassign', type_='wizard')
+        module='stock_shipment_out_autoassign', type_='wizard')

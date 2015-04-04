@@ -1,6 +1,6 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 
-from .test_stock_out_autoassign import suite
+from .test_stock_shipment_out_autoassign import suite
 
 __all__ = ['suite']

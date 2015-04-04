@@ -1,5 +1,5 @@
-Installing trytond_stock_out_autoassign
-=======================================
+Installing trytond_stock_shipment_out_autoassign
+================================================
 
 Prerequisites
 -------------
@@ -10,8 +10,8 @@ Prerequisites
 Installation
 ------------
 
-Once you've downloaded and unpacked the trytond_stock_out_autoassign source
-release, enter the directory where the archive was unpacked, and run:
+Once you've downloaded and unpacked the trytond_stock_shipment_out_autoassign
+source release, enter the directory where the archive was unpacked, and run:
 
     python setup.py install
 
@@ -26,4 +26,4 @@ documentation:
   http://docs.python.org/inst/inst.html
 
 To use without installation, extract the archive into ``trytond/modules`` with
-the directory name stock_out_autoassign.
+the directory name stock_shipment_out_autoassign.

@@ -47,7 +47,7 @@ class ShipmentOutAssignWizard(Wizard):
     'Shipment Out Assign Wizard'
     __name__ = 'stock.shipment.out.assign.wizard'
     start = StateView('stock.shipment.out.assign.wizard.start',
-        'stock_out_autoassign.'
+        'stock_shipment_out_autoassign.'
         'stock_shipment_out_assign_wizard_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
             Button('Assign', 'assign', 'tryton-ok', default=True),

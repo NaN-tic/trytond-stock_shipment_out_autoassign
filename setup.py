@@ -7,9 +7,10 @@ import re
 import os
 import ConfigParser
 
-MODULE = 'stock_out_autoassign'
+MODULE = 'stock_shipment_out_autoassign'
 PREFIX = 'trytonzz'
 MODULE2PREFIX = {}
+
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
@@ -39,11 +40,12 @@ tests_require = ['proteus >= %s.%s, < %s.%s' %
 
 setup(name='%s_%s' % (PREFIX, MODULE),
     version=info.get('version', '0.0.1'),
-    description='Tryton module to assign automatically lot in out shipments',
+    description='Tryton module to assign automatically out shipments in '
+    'waiting state',
     author='Zikzakmedia SL',
     author_email='zikzak@zikzakmedia.com',
     url='http://www.zikzakmedia.com',
-    download_url="https://bitbucket.org/zikzakmedia/trytond-stock_out_autoassign",
+    download_url="https://bitbucket.org/zikzakmedia/trytond-stock_shipment_out_autoassign",
     package_dir={'trytond.modules.%s' % MODULE: '.'},
     packages=[
         'trytond.modules.%s' % MODULE,
