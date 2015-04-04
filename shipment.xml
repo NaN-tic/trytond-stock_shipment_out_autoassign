@@ -11,7 +11,7 @@ copyright notices and license terms. -->
         </record>
         <record model="ir.action.wizard"
                 id="stock_shipment_out_assign_wizard">
-            <field name="name">Try Assign Shipments Out Wizard</field>
+            <field name="name">Assign Out Shipments Wizard</field>
             <field name="wiz_name">stock.shipment.out.assign.wizard</field>
         </record>
         <menuitem
@@ -20,7 +20,7 @@ copyright notices and license terms. -->
             id="menu_stock_shipment_out_assign"/>
 
         <record model="ir.cron" id="cron_shipment_out_assign_try_scheduler">
-            <field name="name">Shipment Out Assign Try Scheduler</field>
+            <field name="name">Assign Out Shipments Scheduler</field>
             <field name="request_user" ref="res.user_admin"/>
             <field name="user" ref="res.user_trigger"/>
             <field name="active" eval="True"/>

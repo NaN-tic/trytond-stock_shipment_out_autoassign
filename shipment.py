@@ -26,13 +26,13 @@ class ShipmentOut:
 
 
 class ShipmentOutAssignWizardStart(ModelView):
-    'Shipment Out Assign Wizard Start'
+    'Assign Out Shipment Wizard Start'
     __name__ = 'stock.shipment.out.assign.wizard.start'
     shipments = fields.Many2Many('stock.shipment.out', None, None, 'Shipments',
         domain=[
             ('state', 'in', ['waiting']),
             ],
-        help='Select output shipments to trying to assign them.')
+        help='Select output shipments to try to assign them.')
 
     @staticmethod
     def default_shipments():
@@ -44,7 +44,7 @@ class ShipmentOutAssignWizardStart(ModelView):
 
 
 class ShipmentOutAssignWizard(Wizard):
-    'Shipment Out Assign Wizard'
+    'Assign Out Shipment Wizard'
     __name__ = 'stock.shipment.out.assign.wizard'
     start = StateView('stock.shipment.out.assign.wizard.start',
         'stock_shipment_out_autoassign.'
