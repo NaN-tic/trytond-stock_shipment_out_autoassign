@@ -15,7 +15,7 @@ copyright notices and license terms. -->
             <field name="wiz_name">stock.shipment.out.assign.wizard</field>
         </record>
         <menuitem
-            name="Assign Out Shipments"
+            name="Assign Shipments"
             parent="stock.menu_shipment_out_form"
             action="stock_shipment_out_assign_wizard"
             id="menu_stock_shipment_out_assign"/>
