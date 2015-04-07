@@ -19,6 +19,11 @@ copyright notices and license terms. -->
             parent="stock.menu_shipment_out_form"
             action="stock_shipment_out_assign_wizard"
             id="menu_stock_shipment_out_assign"/>
+        <record model="ir.ui.menu-res.group"
+            id="menu_stock_shipment_out_assign_group_stock_force_assignment">
+            <field name="menu" ref="menu_stock_shipment_out_assign"/>
+            <field name="group" ref="stock.group_stock_force_assignment"/>
+        </record>
 
         <record model="ir.cron" id="cron_shipment_out_assign_try_scheduler">
             <field name="name">Assign Out Shipments Scheduler</field>
