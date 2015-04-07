@@ -15,7 +15,7 @@ msgid "Select output shipments to try to assign them."
 msgstr "Seleccione los albaranes de salida para intentar reservarlos."
 
 msgctxt "model:ir.action,name:stock_shipment_out_assign_wizard"
-msgid "Assign Out Shipment Wizard"
+msgid "Assign Out Shipments Wizard"
 msgstr "Asistente de reserva de albaranes de salida"
 
 msgctxt "model:ir.cron,name:cron_shipment_out_assign_try_scheduler"
@@ -23,8 +23,8 @@ msgid "Assign Out Shipments Scheduler"
 msgstr "Planificador para reservar albaranes de salida"
 
 msgctxt "model:ir.ui.menu,name:menu_stock_shipment_out_assign"
-msgid "Assign Out Shipments Wizard"
-msgstr "Asistente de reserva de albaranes de salida"
+msgid "Assign Out Shipments"
+msgstr "Reservar albaranes de salida"
 
 msgctxt "model:stock.shipment.out.assign.wizard.start,name:"
 msgid "Assign Out Shipment Wizard Start"
