@@ -1,10 +1,10 @@
-Installing trytond_stock_shipment_out_autoassign
+Installing trytond-stock_shipment_out_autoassign
 ================================================
 
 Prerequisites
 -------------
 
- * Python 2.6 or later (http://www.python.org/)
+ * Python 2.7 or later (http://www.python.org/)
  * trytond (http://www.tryton.org/)
 
 Installation
