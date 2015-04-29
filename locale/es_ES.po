@@ -19,8 +19,8 @@ msgid "Assign Out Shipments Wizard"
 msgstr "Asistente de reserva de albaranes de cliente"
 
 msgctxt "model:ir.cron,name:cron_shipment_out_assign_try_scheduler"
-msgid "Assign Out Shipments Scheduler"
-msgstr "Planificador para reservar albaranes de cliente"
+msgid "Assign Out Shipments"
+msgstr "Reservar albaranes de cliente"
 
 msgctxt "model:ir.ui.menu,name:menu_stock_shipment_out_assign"
 msgid "Assign Shipments"

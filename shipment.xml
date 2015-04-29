@@ -26,7 +26,7 @@ copyright notices and license terms. -->
         </record>
 
         <record model="ir.cron" id="cron_shipment_out_assign_try_scheduler">
-            <field name="name">Assign Out Shipments Scheduler</field>
+            <field name="name">Assign Out Shipments</field>
             <field name="request_user" ref="res.user_admin"/>
             <field name="user" ref="res.user_trigger"/>
             <field name="active" eval="True"/>
