@@ -32,7 +32,12 @@ class ShipmentOutAssignWizardStart(ModelView):
         domain=[
             ('state', 'in', ['waiting']),
             ],
+        states={
+            'required': True,
+            },
         help='Select output shipments to try to assign them.')
+    warehouse = fields.Many2One('stock.location', 'Warehouse')
+    from_datetime = fields.DateTime('From Date & Time')
 
     @staticmethod
     def default_shipments():
@@ -56,7 +61,14 @@ class ShipmentOutAssignWizard(Wizard):
 
     def do_assign(self, action):
         ShipmentOut = Pool().get('stock.shipment.out')
-        shipments = self.start.shipments
+        domain = [('id', 'in', [s.id for s in self.start.shipments])]
+        warehouse = self.start.warehouse
+        if warehouse:
+            domain.append(('warehouse', '=', warehouse.id))
+        from_date = self.start.from_datetime
+        if from_date:
+            domain.append(('create_date', '>', from_date))
+        shipments = ShipmentOut.search(domain)
         ShipmentOut.assign_try(shipments)
 
         action['pyson_domain'] = PYSONEncoder().encode([
