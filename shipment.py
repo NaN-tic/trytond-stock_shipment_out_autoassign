@@ -19,9 +19,37 @@ class ShipmentOut:
         '''
         This method is intended to be called from ir.cron
         '''
-        shipments = cls.search([
-                ('state', 'in', ['waiting']),
+        pool = Pool()
+        ModelData = pool.get('ir.model.data')
+        Cron = pool.get('ir.cron')
+        Location = pool.get('stock.location')
+        Move = pool.get('stock.move')
+
+        cron = Cron(ModelData.get_id('stock_shipment_out_autoassign',
+                'cron_shipment_out_assign_try_scheduler'))
+        from_date = cron.next_call - Cron.get_delta(cron)
+        locations = Location.search([
+                ('code', '!=', 'OUT'),
+                ('type', '=', 'storage'),
                 ])
+        customer_locations = Location.search([('type', '=', 'customer')])
+        moves = Move.search([
+                ('write_date', '>=', from_date),
+                ('to_location', 'in', locations),
+                ('state', '=', 'done'),
+                ])
+        products = {m.product for m in moves}
+        moves = Move.search([
+                ('product', 'in', products),
+                ('to_location', 'in', customer_locations),
+                ('state', '=', 'draft'),
+                ])
+        shipments = {m.shipment
+            for m in moves
+            if m.shipment
+            and isinstance(m.shipment, cls)
+            and m.shipment.state == 'waiting'
+            }
         cls.assign_try(shipments)
 
 
