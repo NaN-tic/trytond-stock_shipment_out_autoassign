@@ -50,6 +50,11 @@ class ShipmentOut:
             and isinstance(m.shipment, cls)
             and m.shipment.state == 'waiting'
             }
+        if shipments and args:
+            warehouses = Location.search([
+                    ('name', 'in', args),
+                    ])
+            shipments = {s for s in shipments if s.warehouse in warehouses}
         cls.assign_try(shipments)
 
 
