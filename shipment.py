@@ -15,6 +15,12 @@ class ShipmentOut:
     __name__ = 'stock.shipment.out'
 
     @classmethod
+    def wait(cls, shipments):
+        forward_shipments = [s for s in shipments if s.state == 'draft']
+        super(ShipmentOut, cls).wait(shipments)
+        cls.assign_try(forward_shipments)
+
+    @classmethod
     def assign_try_scheduler(cls, args=None):
         '''
         This method is intended to be called from ir.cron
