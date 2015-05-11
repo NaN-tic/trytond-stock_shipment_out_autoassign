@@ -108,7 +108,7 @@ class ShipmentOutAssignWizard(Wizard):
         if from_date:
             domain.append(('create_date', '>', from_date))
         shipments = ShipmentOut.search(domain)
-        ShipmentOut.assign_try(shipments)
+        shipments = [s for s in shipments if ShipmentOut.assign_try([s])]
 
         action['pyson_domain'] = PYSONEncoder().encode([
                 ('id', 'in', [s.id for s in shipments]),
