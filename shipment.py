@@ -7,7 +7,7 @@ from trytond.wizard import Wizard, StateView, Button, StateAction
 
 
 __all__ = ['ShipmentOut', 'ShipmentOutAssignWizardStart',
-    'ShipmentOutAssignWizard']
+    'ShipmentOutAssignWizardShipments', 'ShipmentOutAssignWizard']
 __metaclass__ = PoolMeta
 
 
@@ -67,6 +67,13 @@ class ShipmentOut:
 class ShipmentOutAssignWizardStart(ModelView):
     'Assign Out Shipment Wizard Start'
     __name__ = 'stock.shipment.out.assign.wizard.start'
+    warehouse = fields.Many2One('stock.location', 'Warehouse')
+    from_datetime = fields.DateTime('From Date & Time')
+
+
+class ShipmentOutAssignWizardShipments(ModelView):
+    'Assign Out Shipment Wizard Warehouse'
+    __name__ = 'stock.shipment.out.assign.wizard.shipments'
     shipments = fields.Many2Many('stock.shipment.out', None, None, 'Shipments',
         domain=[
             ('state', 'in', ['waiting']),
@@ -75,16 +82,6 @@ class ShipmentOutAssignWizardStart(ModelView):
             'required': True,
             },
         help='Select output shipments to try to assign them.')
-    warehouse = fields.Many2One('stock.location', 'Warehouse')
-    from_datetime = fields.DateTime('From Date & Time')
-
-    @staticmethod
-    def default_shipments():
-        ShipmentOut = Pool().get('stock.shipment.out')
-        shipments = ShipmentOut.search([
-                ('state', 'in', ['waiting']),
-                ])
-        return [w.id for w in shipments]
 
 
 class ShipmentOutAssignWizard(Wizard):
@@ -94,20 +91,30 @@ class ShipmentOutAssignWizard(Wizard):
         'stock_shipment_out_autoassign.'
         'stock_shipment_out_assign_wizard_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Assign', 'shipments', 'tryton-ok', default=True),
+            ])
+    shipments = StateView('stock.shipment.out.assign.wizard.shipments',
+        'stock_shipment_out_autoassign.'
+        'stock_shipment_out_assign_wizard_shipments_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
             Button('Assign', 'assign', 'tryton-ok', default=True),
             ])
     assign = StateAction('stock.act_shipment_out_form')
 
+    def default_shipments(self, fields):
+        ShipmentOut = Pool().get('stock.shipment.out')
+        shipments = ShipmentOut.search([
+                ('state', 'in', ['waiting']),
+                ('warehouse', '=', self.start.warehouse),
+                ('create_date', '>', self.start.from_datetime),
+                ])
+        return {
+            'shipments': [s.id for s in shipments],
+            }
+
     def do_assign(self, action):
         ShipmentOut = Pool().get('stock.shipment.out')
-        domain = [('id', 'in', [s.id for s in self.start.shipments])]
-        warehouse = self.start.warehouse
-        if warehouse:
-            domain.append(('warehouse', '=', warehouse.id))
-        from_date = self.start.from_datetime
-        if from_date:
-            domain.append(('create_date', '>', from_date))
-        shipments = ShipmentOut.search(domain)
+        shipments = self.shipments.shipments
         shipments = [s for s in shipments if ShipmentOut.assign_try([s])]
 
         action['pyson_domain'] = PYSONEncoder().encode([

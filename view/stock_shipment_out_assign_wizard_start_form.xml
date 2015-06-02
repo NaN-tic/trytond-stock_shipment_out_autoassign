@@ -6,5 +6,4 @@ copyright notices and license terms. -->
     <field name="warehouse"/>
     <label name="from_datetime"/>
     <field name="from_datetime"/>
-    <field name="shipments" colspan="4"/>
 </form>
