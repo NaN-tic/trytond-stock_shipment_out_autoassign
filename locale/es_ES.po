@@ -2,42 +2,70 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "field:stock.shipment.out.assign.wizard.shipments,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:stock.shipment.out.assign.wizard.shipments,shipments:"
+msgid "Shipments"
+msgstr "Albarans"
+
+msgctxt "field:stock.shipment.out.assign.wizard.start,from_datetime:"
+msgid "From Date & Time"
+msgstr "Des de data i hora"
+
 msgctxt "field:stock.shipment.out.assign.wizard.start,id:"
 msgid "ID"
 msgstr "ID"
 
-msgctxt "field:stock.shipment.out.assign.wizard.start,shipments:"
-msgid "Shipments"
-msgstr "Albaranes"
+msgctxt "field:stock.shipment.out.assign.wizard.start,warehouse:"
+msgid "Warehouse"
+msgstr "Magatzem"
 
-msgctxt "help:stock.shipment.out.assign.wizard.start,shipments:"
+msgctxt "help:stock.shipment.out.assign.wizard.shipments,shipments:"
 msgid "Select output shipments to try to assign them."
-msgstr "Seleccione los albaranes de cliente para intentar reservarlos."
+msgstr "Seleccioneu albarans de sortida per intentar assignar-los."
 
 msgctxt "model:ir.action,name:stock_shipment_out_assign_wizard"
 msgid "Assign Out Shipments Wizard"
-msgstr "Asistente de reserva de albaranes de cliente"
+msgstr "Assistent de reserva d'albarans de client"
 
 msgctxt "model:ir.cron,name:cron_shipment_out_assign_try_scheduler"
 msgid "Assign Out Shipments"
-msgstr "Reservar albaranes de cliente"
+msgstr "Reserva albarans de client"
 
 msgctxt "model:ir.ui.menu,name:menu_stock_shipment_out_assign"
 msgid "Assign Shipments"
-msgstr "Reservar albaranes"
+msgstr "Reserva albarans"
+
+msgctxt "model:stock.shipment.out.assign.wizard.shipments,name:"
+msgid "Assign Out Shipment Wizard Warehouse"
+msgstr "Assistent de magatzem per assignar albarans de client"
 
 msgctxt "model:stock.shipment.out.assign.wizard.start,name:"
 msgid "Assign Out Shipment Wizard Start"
-msgstr "Inicio asistente de reserva de albaranes de cliente"
+msgstr "Inici assistent de reserva d'albaranes de client"
+
+msgctxt "view:stock.shipment.out.assign.wizard.shipments:"
+msgid "Try Assign Out Shipments Wizard"
+msgstr "Assistent per intentar reservar albarans de client"
 
 msgctxt "view:stock.shipment.out.assign.wizard.start:"
 msgid "Try Assign Out Shipments Wizard"
-msgstr "Asistente para intentar reservar albaranes de cliente"
+msgstr "Assistent per intentar reservar albarans de client"
 
-msgctxt "wizard_button:stock.shipment.out.assign.wizard,start,assign:"
+msgctxt "wizard_button:stock.shipment.out.assign.wizard,shipments,assign:"
 msgid "Assign"
-msgstr "Reservar"
+msgstr "Reserva"
+
+msgctxt "wizard_button:stock.shipment.out.assign.wizard,shipments,end:"
+msgid "Cancel"
+msgstr "Cancel·lada"
 
 msgctxt "wizard_button:stock.shipment.out.assign.wizard,start,end:"
 msgid "Cancel"
-msgstr "Cancelar"
+msgstr "Cancel·la"
+
+msgctxt "wizard_button:stock.shipment.out.assign.wizard,start,shipments:"
+msgid "Assign"
+msgstr "Reserva"
