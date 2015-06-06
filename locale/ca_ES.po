@@ -4,7 +4,7 @@ msgstr "Content-Type: text/plain; charset=utf-8\n"
 
 msgctxt "field:stock.shipment.out.assign.wizard.shipments,id:"
 msgid "ID"
-msgstr "Identificador"
+msgstr "ID"
 
 msgctxt "field:stock.shipment.out.assign.wizard.shipments,shipments:"
 msgid "Shipments"
@@ -24,7 +24,7 @@ msgstr "Magatzem"
 
 msgctxt "help:stock.shipment.out.assign.wizard.shipments,shipments:"
 msgid "Select output shipments to try to assign them."
-msgstr "Seleccioneu albarans de sortida per intentar assignar-los."
+msgstr "Seleccioneu albarans de client per intentar assignar-los."
 
 msgctxt "model:ir.action,name:stock_shipment_out_assign_wizard"
 msgid "Assign Out Shipments Wizard"
@@ -60,7 +60,7 @@ msgstr "Reserva"
 
 msgctxt "wizard_button:stock.shipment.out.assign.wizard,shipments,end:"
 msgid "Cancel"
-msgstr "Cancel·lada"
+msgstr "Cancel·la"
 
 msgctxt "wizard_button:stock.shipment.out.assign.wizard,start,end:"
 msgid "Cancel"
