@@ -2,6 +2,7 @@
 # copyright notices and license terms.
 from trytond.model import fields, ModelView
 from trytond.pool import Pool, PoolMeta
+from trytond.transaction import Transaction
 from trytond.pyson import PYSONEncoder
 from trytond.wizard import Wizard, StateView, Button, StateAction
 
@@ -50,18 +51,21 @@ class ShipmentOut:
                 ('to_location', 'in', customer_locations),
                 ('state', '=', 'draft'),
                 ])
-        shipments = {m.shipment
+        shipments = [m.shipment
             for m in moves
             if m.shipment
             and isinstance(m.shipment, cls)
             and m.shipment.state == 'waiting'
-            }
-        if shipments and args:
+            ]
+        warehouses = []
+        if args:
             warehouses = Location.search([
                     ('name', 'in', args),
                     ])
-            shipments = {s for s in shipments if s.warehouse in warehouses}
-        cls.assign_try(shipments)
+        for s in shipments:
+            if s.warehouse in warehouses:
+                cls.assign_try([s])
+                Transaction().cursor.commit()
 
 
 class ShipmentOutAssignWizardStart(ModelView):
@@ -114,8 +118,11 @@ class ShipmentOutAssignWizard(Wizard):
 
     def do_assign(self, action):
         ShipmentOut = Pool().get('stock.shipment.out')
-        shipments = self.shipments.shipments
-        shipments = [s for s in shipments if ShipmentOut.assign_try([s])]
+        shipments = []
+        for s in self.shipments.shipments:
+            if ShipmentOut.assign_try([s]):
+                shipments.append(s)
+            Transaction().cursor.commit()
 
         action['pyson_domain'] = PYSONEncoder().encode([
                 ('id', 'in', [s.id for s in shipments]),
