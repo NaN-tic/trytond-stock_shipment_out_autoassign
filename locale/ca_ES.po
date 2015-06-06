@@ -67,5 +67,5 @@ msgid "Cancel"
 msgstr "Cancel·la"
 
 msgctxt "wizard_button:stock.shipment.out.assign.wizard,start,shipments:"
-msgid "Assign"
-msgstr "Reserva"
+msgid "Next"
+msgstr "Següent"
