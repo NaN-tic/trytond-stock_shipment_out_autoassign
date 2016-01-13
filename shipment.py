@@ -122,7 +122,7 @@ class ShipmentOutAssignWizard(Wizard):
         for s in self.shipments.shipments:
             if ShipmentOut.assign_try([s]):
                 shipments.append(s)
-            Transaction().cursor.commit()
+                Transaction().cursor.commit()
 
         action['pyson_domain'] = PYSONEncoder().encode([
                 ('id', 'in', [s.id for s in shipments]),
