@@ -96,7 +96,7 @@ class ShipmentOutAssignWizard(Wizard):
                 ('state', 'in', ['waiting']),
                 ('warehouse', '=', self.start.warehouse),
                 ('create_date', '>', self.start.from_datetime),
-                ], order=[('create_date', 'ASC')], limit=55)
+                ], order=[('create_date', 'ASC')])
         shipments = pickings[:]
         while shipments:
             process_shipments = shipments[:10]
