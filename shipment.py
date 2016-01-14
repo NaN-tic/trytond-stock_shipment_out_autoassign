@@ -2,14 +2,18 @@
 # copyright notices and license terms.
 from trytond.model import fields, ModelView
 from trytond.pool import Pool, PoolMeta
-from trytond.transaction import Transaction
 from trytond.pyson import PYSONEncoder
+from trytond.transaction import Transaction
 from trytond.wizard import Wizard, StateView, Button, StateAction
+import logging
+
+from psycopg2._psycopg import DatabaseError
 
 
 __all__ = ['ShipmentOut', 'ShipmentOutAssignWizardStart',
-    'ShipmentOutAssignWizardShipments', 'ShipmentOutAssignWizard']
+    'ShipmentOutAssignWizard']
 __metaclass__ = PoolMeta
+logger = logging.getLogger(__name__)
 
 
 class ShipmentOut:
@@ -75,19 +79,6 @@ class ShipmentOutAssignWizardStart(ModelView):
     from_datetime = fields.DateTime('From Date & Time')
 
 
-class ShipmentOutAssignWizardShipments(ModelView):
-    'Assign Out Shipment Wizard Warehouse'
-    __name__ = 'stock.shipment.out.assign.wizard.shipments'
-    shipments = fields.Many2Many('stock.shipment.out', None, None, 'Shipments',
-        domain=[
-            ('state', 'in', ['waiting']),
-            ],
-        states={
-            'required': True,
-            },
-        help='Select output shipments to try to assign them.')
-
-
 class ShipmentOutAssignWizard(Wizard):
     'Assign Out Shipment Wizard'
     __name__ = 'stock.shipment.out.assign.wizard'
@@ -95,37 +86,32 @@ class ShipmentOutAssignWizard(Wizard):
         'stock_shipment_out_autoassign.'
         'stock_shipment_out_assign_wizard_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Next', 'shipments', 'tryton-go-next', default=True),
-            ])
-    shipments = StateView('stock.shipment.out.assign.wizard.shipments',
-        'stock_shipment_out_autoassign.'
-        'stock_shipment_out_assign_wizard_shipments_view_form', [
-            Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Assign', 'assign', 'tryton-ok', default=True),
+            Button('Next', 'assign', 'tryton-go-next', default=True),
             ])
     assign = StateAction('stock.act_shipment_out_form')
 
-    def default_shipments(self, fields):
+    def do_assign(self, action):
         ShipmentOut = Pool().get('stock.shipment.out')
-        shipments = ShipmentOut.search([
+        pickings = ShipmentOut.search([
                 ('state', 'in', ['waiting']),
                 ('warehouse', '=', self.start.warehouse),
                 ('create_date', '>', self.start.from_datetime),
-                ])
-        return {
-            'shipments': [s.id for s in shipments],
-            }
-
-    def do_assign(self, action):
-        ShipmentOut = Pool().get('stock.shipment.out')
-        shipments = []
-        for s in self.shipments.shipments:
-            if ShipmentOut.assign_try([s]):
-                shipments.append(s)
-                Transaction().cursor.commit()
+                ], order=[('create_date', 'ASC')], limit=55)
+        shipments = pickings[:]
+        while shipments:
+            process_shipments = shipments[:10]
+            shipments = shipments[10:]
+            try:
+                ShipmentOut.assign_try(process_shipments)
+            except DatabaseError as e:
+                logger.error('Database raised an error trying to assign '
+                    'shipments with ShipmentOutAssignWizard: %s' % e)
+                raise
+            except Exception as e:
+                logger.error('Unknown error: %s' % e)
 
         action['pyson_domain'] = PYSONEncoder().encode([
-                ('id', 'in', [s.id for s in shipments]),
+                ('id', 'in', [s.id for s in pickings]),
                 ])
         return action, {}
 
