@@ -9,12 +9,6 @@ copyright notices and license terms. -->
             <field name="type">form</field>
             <field name="name">stock_shipment_out_assign_wizard_start_form</field>
         </record>
-        <record model="ir.ui.view"
-                id="stock_shipment_out_assign_wizard_shipments_view_form">
-            <field name="model">stock.shipment.out.assign.wizard.shipments</field>
-            <field name="type">form</field>
-            <field name="name">stock_shipment_out_assign_wizard_shipments_form</field>
-        </record>
         <record model="ir.action.wizard"
                 id="stock_shipment_out_assign_wizard">
             <field name="name">Assign Out Shipments Wizard</field>

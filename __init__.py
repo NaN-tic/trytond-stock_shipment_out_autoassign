@@ -10,7 +10,6 @@ def register():
         Move,
         ShipmentOut,
         ShipmentOutAssignWizardStart,
-        ShipmentOutAssignWizardShipments,
         module='stock_shipment_out_autoassign', type_='model')
     Pool.register(
         ShipmentOutAssignWizard,
