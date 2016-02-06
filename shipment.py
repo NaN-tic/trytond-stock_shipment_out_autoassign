@@ -5,10 +5,8 @@ from trytond.pool import Pool, PoolMeta
 from trytond.pyson import PYSONEncoder
 from trytond.transaction import Transaction
 from trytond.wizard import Wizard, StateView, Button, StateAction
+import datetime
 import logging
-
-from psycopg2._psycopg import DatabaseError
-
 
 __all__ = ['ShipmentOut', 'ShipmentOutAssignWizardStart',
     'ShipmentOutAssignWizard']
@@ -75,8 +73,9 @@ class ShipmentOut:
 class ShipmentOutAssignWizardStart(ModelView):
     'Assign Out Shipment Wizard Start'
     __name__ = 'stock.shipment.out.assign.wizard.start'
-    warehouse = fields.Many2One('stock.location', 'Warehouse')
-    from_datetime = fields.DateTime('From Date & Time')
+    warehouse = fields.Many2One('stock.location', 'Warehouse',
+        domain=[('type', '=', 'warehouse')], required=True)
+    from_datetime = fields.DateTime('From Date & Time', required=True)
 
 
 class ShipmentOutAssignWizard(Wizard):
@@ -92,26 +91,21 @@ class ShipmentOutAssignWizard(Wizard):
 
     def do_assign(self, action):
         ShipmentOut = Pool().get('stock.shipment.out')
-        pickings = ShipmentOut.search([
+
+        shipments_assigned = []
+        shipments = ShipmentOut.search([
                 ('state', 'in', ['waiting']),
                 ('warehouse', '=', self.start.warehouse),
                 ('create_date', '>', self.start.from_datetime),
                 ], order=[('create_date', 'ASC')])
-        shipments = pickings[:]
-        while shipments:
-            process_shipments = shipments[:10]
-            shipments = shipments[10:]
-            try:
-                ShipmentOut.assign_try(process_shipments)
-            except DatabaseError as e:
-                logger.error('Database raised an error trying to assign '
-                    'shipments with ShipmentOutAssignWizard: %s' % e)
-                raise
-            except Exception as e:
-                logger.error('Unknown error: %s' % e)
+
+        for s in shipments:
+            if ShipmentOut.assign_try([s]):
+                shipments_assigned.append(s)
+            Transaction().cursor.commit()
 
         action['pyson_domain'] = PYSONEncoder().encode([
-                ('id', 'in', [s.id for s in pickings]),
+                ('id', 'in', [s.id for s in shipments_assigned]),
                 ])
         return action, {}
 
