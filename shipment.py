@@ -77,6 +77,18 @@ class ShipmentOutAssignWizardStart(ModelView):
         domain=[('type', '=', 'warehouse')], required=True)
     from_datetime = fields.DateTime('From Date & Time', required=True)
 
+    @classmethod
+    def default_warehouse(cls):
+        Location = Pool().get('stock.location')
+        locations = Location.search(cls.warehouse.domain)
+        if len(locations) == 1:
+            return locations[0].id
+
+    @classmethod
+    def default_from_datetime(cls):
+        now = datetime.datetime.now()
+        return now
+
 
 class ShipmentOutAssignWizard(Wizard):
     'Assign Out Shipment Wizard'
