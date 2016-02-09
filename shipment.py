@@ -19,9 +19,13 @@ class ShipmentOut:
 
     @classmethod
     def wait(cls, shipments):
-        forward_shipments = [s for s in shipments if s.state == 'draft']
+        shipments_ids = [s.id for s in shipments if s.state == 'draft']
         super(ShipmentOut, cls).wait(shipments)
-        cls.assign_try(forward_shipments)
+
+        if shipments_ids:
+            with Transaction().set_context(_check_access=False):
+                shipments_to_assign = cls.browse(shipments_ids)
+                cls.assign_try(shipments_to_assign)
 
     @classmethod
     def assign_try_scheduler(cls, args=None):
