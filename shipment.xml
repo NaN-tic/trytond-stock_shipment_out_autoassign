@@ -3,6 +3,21 @@
 copyright notices and license terms. -->
 <tryton>
     <data>
+        <!-- user cron shipment out assing try -->
+        <record model="res.user" id="user_stock_assign_try">
+            <field name="login">user_stock_assign_try</field>
+            <field name="name">Cron Stock Assign Try</field>
+            <field name="active" eval="False"/>
+        </record>
+        <record model="res.user-res.group" id="user_stock_assign_try_stock_force_assignment_group">
+            <field name="user" ref="user_stock_assign_try"/>
+            <field name="group" ref="stock.group_stock_force_assignment"/>
+        </record>
+        <record model="res.user-res.group" id="user_stock_assign_try_stock_group">
+            <field name="user" ref="user_stock_assign_try"/>
+            <field name="group" ref="stock.group_stock"/>
+        </record>
+
         <record model="ir.ui.view"
                 id="stock_shipment_out_assign_wizard_start_view_form">
             <field name="model">stock.shipment.out.assign.wizard.start</field>
@@ -28,7 +43,7 @@ copyright notices and license terms. -->
         <record model="ir.cron" id="cron_shipment_out_assign_try_scheduler">
             <field name="name">Assign Out Shipments</field>
             <field name="request_user" ref="res.user_admin"/>
-            <field name="user" ref="res.user_trigger"/>
+            <field name="user" ref="user_stock_assign_try"/>
             <field name="active" eval="True"/>
             <field name="interval_number" eval="1"/>
             <field name="interval_type">hours</field>

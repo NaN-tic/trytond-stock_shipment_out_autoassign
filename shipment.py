@@ -31,47 +31,32 @@ class ShipmentOut:
     def assign_try_scheduler(cls, args=None):
         '''
         This method is intended to be called from ir.cron
+        args: warehouse ids [ids]
         '''
         pool = Pool()
-        ModelData = pool.get('ir.model.data')
         Cron = pool.get('ir.cron')
-        Location = pool.get('stock.location')
-        Move = pool.get('stock.move')
+        ModelData = pool.get('ir.model.data')
+        ShipmentOut = pool.get('stock.shipment.out')
 
         cron = Cron(ModelData.get_id('stock_shipment_out_autoassign',
                 'cron_shipment_out_assign_try_scheduler'))
         from_date = cron.next_call - Cron.get_delta(cron)
-        locations = Location.search([
-                ('code', '!=', 'OUT'),
-                ('type', '=', 'storage'),
-                ])
-        customer_locations = Location.search([('type', '=', 'customer')])
-        moves = Move.search([
-                ('write_date', '>=', from_date),
-                ('to_location', 'in', locations),
-                ('state', '=', 'done'),
-                ])
-        products = {m.product for m in moves}
-        moves = Move.search([
-                ('product', 'in', products),
-                ('to_location', 'in', customer_locations),
-                ('state', '=', 'draft'),
-                ])
-        shipments = [m.shipment
-            for m in moves
-            if m.shipment
-            and isinstance(m.shipment, cls)
-            and m.shipment.state == 'waiting'
+
+        domain = [
+            ('state', '=', 'waiting'),
+            ('write_date', '>=', from_date),
             ]
-        warehouses = []
         if args:
-            warehouses = Location.search([
-                    ('id', 'in', args),
-                    ])
+            domain.append(
+                ('id', 'in', args),
+                )
+        shipments = ShipmentOut.search(domain)
+
+        logger.info(
+            'Try Assign %s shipments' % (len(shipments)))
         for s in shipments:
-            if s.warehouse in warehouses:
-                cls.assign_try([s])
-                Transaction().cursor.commit()
+            ShipmentOut.assign_try([s])
+            Transaction().cursor.commit()
 
 
 class ShipmentOutAssignWizardStart(ModelView):
