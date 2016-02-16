@@ -22,7 +22,7 @@ class ShipmentOut:
         shipments_ids = [s.id for s in shipments if s.state == 'draft']
         super(ShipmentOut, cls).wait(shipments)
 
-        if shipments_ids:
+        if Transaction().context.get('assign_try', True) and shipments_ids:
             with Transaction().set_context(_check_access=False):
                 shipments_to_assign = cls.browse(shipments_ids)
                 cls.assign_try(shipments_to_assign)
