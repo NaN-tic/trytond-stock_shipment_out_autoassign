@@ -66,7 +66,7 @@ class ShipmentOut:
         warehouses = []
         if args:
             warehouses = Location.search([
-                    ('name', 'in', args),
+                    ('id', 'in', args),
                     ])
         for s in shipments:
             if s.warehouse in warehouses:
