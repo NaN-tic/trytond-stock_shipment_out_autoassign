@@ -25,7 +25,9 @@ class ShipmentOut:
         if Transaction().context.get('assign_try', True) and shipments_ids:
             with Transaction().set_context(_check_access=False):
                 shipments_to_assign = cls.browse(shipments_ids)
-                cls.assign_try(shipments_to_assign)
+                for s in shipments_to_assign:
+                    cls.assign_try([s])
+                    Transaction().cursor.commit()
 
     @classmethod
     def assign_try_scheduler(cls, args=None):
