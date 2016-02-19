@@ -52,13 +52,21 @@ class ShipmentOut:
             domain.append(
                 ('id', 'in', args),
                 )
-        shipments = ShipmentOut.search(domain)
 
-        logger.info(
-            'Try Assign %s shipments' % (len(shipments)))
-        for s in shipments:
-            ShipmentOut.assign_try([s])
-            Transaction().cursor.commit()
+        shipments_assigned = []
+        with Transaction().set_context(nowait=False):
+            shipments = ShipmentOut.search(domain)
+
+            logger.info(
+                'Scheduler Try Assign. Total: %s' % (len(shipments)))
+
+            for s in shipments:
+                if ShipmentOut.assign_try([s]):
+                    shipments_assigned.append(s)
+                Transaction().cursor.commit()
+
+            logger.info(
+                'End Scheduler Try Assign. Assigned: %s' % (len(shipments_assigned)))
 
 
 class ShipmentOutAssignWizardStart(ModelView):
@@ -96,16 +104,18 @@ class ShipmentOutAssignWizard(Wizard):
         ShipmentOut = Pool().get('stock.shipment.out')
 
         shipments_assigned = []
-        shipments = ShipmentOut.search([
-                ('state', 'in', ['waiting']),
-                ('warehouse', '=', self.start.warehouse),
-                ('create_date', '>', self.start.from_datetime),
-                ], order=[('create_date', 'ASC')])
-
-        for s in shipments:
-            if ShipmentOut.assign_try([s]):
-                shipments_assigned.append(s)
-            Transaction().cursor.commit()
+        with Transaction().set_context(nowait=False):
+            shipments = ShipmentOut.search(['OR', [
+                    ('create_date', '>', self.start.from_datetime),
+                    ('write_date', '>', self.start.from_datetime),
+                ], [
+                    ('state', 'in', ['waiting']),
+                    ('warehouse', '=', self.start.warehouse),
+                ],], order=[('create_date', 'ASC')])
+            for s in shipments:
+                if ShipmentOut.assign_try([s]):
+                    shipments_assigned.append(s)
+                Transaction().cursor.commit()
 
         action['pyson_domain'] = PYSONEncoder().encode([
                 ('id', 'in', [s.id for s in shipments_assigned]),
