@@ -2,6 +2,7 @@
 # copyright notices and license terms.
 from trytond.model import fields, ModelView
 from trytond.pool import Pool, PoolMeta
+from trytond.pyson import Eval, Id
 from trytond.pyson import PYSONEncoder
 from trytond.transaction import Transaction
 from trytond.wizard import Wizard, StateView, Button, StateAction
@@ -16,6 +17,24 @@ logger = logging.getLogger(__name__)
 
 class ShipmentOut:
     __name__ = 'stock.shipment.out'
+
+    @classmethod
+    def __setup__(cls):
+        super(ShipmentOut, cls).__setup__()
+
+        cls._buttons.update({
+                'try_assign': {
+                    'invisible': Eval('state') != 'waiting',
+                    'readonly': ~Eval('groups', []).contains(
+                        Id('stock', 'group_stock')),
+                    },
+                })
+
+    @classmethod
+    @ModelView.button
+    def try_assign(cls, shipments):
+        for s in shipments:
+            cls.assign_try([s])
 
     @classmethod
     def wait(cls, shipments):
