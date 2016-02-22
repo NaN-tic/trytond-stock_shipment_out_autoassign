@@ -80,8 +80,9 @@ class ShipmentOut:
                 'Scheduler Try Assign. Total: %s' % (len(shipments)))
 
             for s in shipments:
-                if ShipmentOut.assign_try([s]):
-                    shipments_assigned.append(s)
+                shipment = ShipmentOut(s.id)
+                if ShipmentOut.assign_try([shipment]):
+                    shipments_assigned.append(shipment)
                 Transaction().cursor.commit()
 
             logger.info(
@@ -130,8 +131,9 @@ class ShipmentOutAssignWizard(Wizard):
                 ('write_date', '>=', self.start.from_datetime),
                 ], order=[('create_date', 'ASC')])
             for s in shipments:
-                if ShipmentOut.assign_try([s]):
-                    shipments_assigned.append(s)
+                shipment = ShipmentOut(s.id)
+                if ShipmentOut.assign_try([shipment]):
+                    shipments_assigned.append(shipment)
                 Transaction().cursor.commit()
 
         action['pyson_domain'] = PYSONEncoder().encode([
