@@ -58,6 +58,30 @@ class ShipmentOut:
         return cursor.fetchall()
 
     @classmethod
+    def get_assignable(cls, shipments):
+        Product = Pool().get('product.product')
+        product_ids = set()
+        location_ids = set()
+        for shipment in shipments:
+            for move in shipment.inventory_moves:
+                location_ids.add(move.from_location.id)
+                product_ids.add(move.product.id)
+        pbl = Product.products_by_location(
+                list(location_ids), list(product_ids))
+        assignable_shipments = []
+        for shipment in shipments:
+            for move in shipment.inventory_moves:
+                if ((move.from_location.id, move.product.id) not in pbl
+                        or move.quantity >= pbl[
+                            (move.from_location.id, move.product.id)]):
+                    break
+            else:
+                for m in shipment.inventory_moves:
+                    pbl[(move.from_location.id, m.product.id)] -= m.quantity
+                assignable_shipments.append(shipment)
+        return assignable_shipments
+
+    @classmethod
     @ModelView.button
     def try_assign(cls, shipments):
         for s in shipments:
@@ -147,26 +171,22 @@ class ShipmentOutAssignWizard(Wizard):
             Button('Cancel', 'end', 'tryton-cancel'),
             Button('Next', 'assign', 'tryton-go-next', default=True),
             ])
-    assign = StateAction('stock.act_shipment_out_form')
+    assign = StateAction('stock_shipment_out_autoassign'
+        '.act_shipment_out_autoassign')
 
     def do_assign(self, action):
         ShipmentOut = Pool().get('stock.shipment.out')
 
-        shipments_assigned = []
-        with Transaction().set_context(dblock=False):
-            shipments = ShipmentOut.search([
-                ('state', 'in', ['waiting']),
-                ('warehouse', '=', self.start.warehouse),
-                ('write_date', '>=', self.start.from_datetime),
-                ], order=[('create_date', 'ASC')])
-            for s in shipments:
-                shipment = ShipmentOut(s.id)
-                if ShipmentOut.assign_try([shipment]):
-                    shipments_assigned.append(shipment)
-                Transaction().cursor.commit()
+        shipments = ShipmentOut.search([
+            ('state', 'in', ['waiting']),
+            ('warehouse', '=', self.start.warehouse),
+            ('write_date', '>=', self.start.from_datetime),
+            ], order=[('create_date', 'ASC')])
+
+        shipments = ShipmentOut.get_assignable(shipments)
 
         action['pyson_domain'] = PYSONEncoder().encode([
-                ('id', 'in', [s.id for s in shipments_assigned]),
+                ('id', 'in', [s.id for s in shipments]),
                 ])
         return action, {}
 
