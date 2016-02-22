@@ -14,6 +14,10 @@ msgctxt "field:stock.shipment.out.assign.wizard.start,warehouse:"
 msgid "Warehouse"
 msgstr "Almacén"
 
+msgctxt "model:ir.action,name:act_shipment_out_autoassign"
+msgid "Pending Customer Shipments to Assign"
+msgstr "Albaranes de cliente pendiente de reservar"
+
 msgctxt "model:ir.action,name:stock_shipment_out_assign_wizard"
 msgid "Assign Out Shipments Wizard"
 msgstr "Asistente de reserva de albaranes de cliente"
