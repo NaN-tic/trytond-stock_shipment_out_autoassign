@@ -92,6 +92,8 @@ class ShipmentOut:
     @ModelView.button
     def try_assign(cls, shipments):
         for s in shipments:
+            if s.state != 'waiting':
+                continue
             cls.assign_try([s])
 
     @classmethod
