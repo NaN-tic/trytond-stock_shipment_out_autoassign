@@ -59,16 +59,23 @@ class ShipmentOut:
 
     @classmethod
     def get_assignable(cls, shipments):
-        Product = Pool().get('product.product')
+        pool = Pool()
+        Product = pool.get('product.product')
+        Date = pool.get('ir.date')
+
+        today = Date.today()
         product_ids = set()
         location_ids = set()
+
         for shipment in shipments:
             for move in shipment.inventory_moves:
                 location_ids.add(move.from_location.id)
                 product_ids.add(move.product.id)
-        pbl = Product.products_by_location(
-                list(location_ids), list(product_ids))
+        with Transaction().set_context(forecast=False, stock_date_end=today):
+            pbl = Product.products_by_location(
+                    list(location_ids), list(product_ids), with_childs=True)
         assignable_shipments = []
+
         for shipment in shipments:
             for move in shipment.inventory_moves:
                 if ((move.from_location.id, move.product.id) not in pbl
