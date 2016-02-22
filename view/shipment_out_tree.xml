@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <!-- This file is part stock_shipment_out_autoassign module for Tryton.
 The COPYRIGHT file at the top level of this repository contains the full copyright notices and license terms. -->
-<form string="Try Assign Out Shipments Wizard">
-    <field name="shipments" colspan="4"/>
-</form>
+<data>
+    <xpath expr="/tree/field[@name='state']" position="after">
+        <button string="Try Assign" name="try_assign" tree_invisible="1"/>
+    </xpath>
+</data>
