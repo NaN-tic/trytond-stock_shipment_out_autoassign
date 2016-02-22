@@ -54,7 +54,7 @@ class ShipmentOut:
                 )
 
         shipments_assigned = []
-        with Transaction().set_context(nowait=False):
+        with Transaction().set_context(dblock=False):
             shipments = ShipmentOut.search(domain)
 
             logger.info(
@@ -104,14 +104,12 @@ class ShipmentOutAssignWizard(Wizard):
         ShipmentOut = Pool().get('stock.shipment.out')
 
         shipments_assigned = []
-        with Transaction().set_context(nowait=False):
-            shipments = ShipmentOut.search(['OR', [
-                    ('create_date', '>', self.start.from_datetime),
-                    ('write_date', '>', self.start.from_datetime),
-                ], [
-                    ('state', 'in', ['waiting']),
-                    ('warehouse', '=', self.start.warehouse),
-                ],], order=[('create_date', 'ASC')])
+        with Transaction().set_context(dblock=False):
+            shipments = ShipmentOut.search([
+                ('state', 'in', ['waiting']),
+                ('warehouse', '=', self.start.warehouse),
+                ('write_date', '>=', self.start.from_datetime),
+                ], order=[('create_date', 'ASC')])
             for s in shipments:
                 if ShipmentOut.assign_try([s]):
                     shipments_assigned.append(s)
