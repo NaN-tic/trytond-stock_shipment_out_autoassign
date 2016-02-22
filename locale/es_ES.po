@@ -1,14 +1,6 @@
-# 
+#
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
-
-msgctxt "field:stock.shipment.out.assign.wizard.shipments,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:stock.shipment.out.assign.wizard.shipments,shipments:"
-msgid "Shipments"
-msgstr "Albaranes"
 
 msgctxt "field:stock.shipment.out.assign.wizard.start,from_datetime:"
 msgid "From Date & Time"
@@ -22,10 +14,6 @@ msgctxt "field:stock.shipment.out.assign.wizard.start,warehouse:"
 msgid "Warehouse"
 msgstr "Almacén"
 
-msgctxt "help:stock.shipment.out.assign.wizard.shipments,shipments:"
-msgid "Select output shipments to try to assign them."
-msgstr "Seleccione los albaranes de cliente para intentar reservarlos."
-
 msgctxt "model:ir.action,name:stock_shipment_out_assign_wizard"
 msgid "Assign Out Shipments Wizard"
 msgstr "Asistente de reserva de albaranes de cliente"
@@ -38,34 +26,26 @@ msgctxt "model:ir.ui.menu,name:menu_stock_shipment_out_assign"
 msgid "Assign Shipments"
 msgstr "Reservar albaranes"
 
-msgctxt "model:stock.shipment.out.assign.wizard.shipments,name:"
-msgid "Assign Out Shipment Wizard Warehouse"
-msgstr "Asistente de almacen para reservar albaranes de cliente"
+msgctxt "model:res.user,name:user_stock_assign_try"
+msgid "Cron Stock Assign Try"
+msgstr "Cron intentar reservar"
 
 msgctxt "model:stock.shipment.out.assign.wizard.start,name:"
 msgid "Assign Out Shipment Wizard Start"
 msgstr "Inicio asistente de reserva de albaranes de cliente"
 
-msgctxt "view:stock.shipment.out.assign.wizard.shipments:"
-msgid "Try Assign Out Shipments Wizard"
-msgstr "Asistente para intentar reservar albaranes de cliente"
-
 msgctxt "view:stock.shipment.out.assign.wizard.start:"
 msgid "Try Assign Out Shipments Wizard"
 msgstr "Asistente para intentar reservar albaranes de cliente"
 
-msgctxt "wizard_button:stock.shipment.out.assign.wizard,shipments,assign:"
-msgid "Assign"
-msgstr "Reservar"
+msgctxt "view:stock.shipment.out:"
+msgid "Try Assign"
+msgstr "Intentar reservar"
 
-msgctxt "wizard_button:stock.shipment.out.assign.wizard,shipments,end:"
-msgid "Cancel"
-msgstr "Cancelar"
+msgctxt "wizard_button:stock.shipment.out.assign.wizard,start,assign:"
+msgid "Next"
+msgstr "Siguiente"
 
 msgctxt "wizard_button:stock.shipment.out.assign.wizard,start,end:"
 msgid "Cancel"
 msgstr "Cancelar"
-
-msgctxt "wizard_button:stock.shipment.out.assign.wizard,start,shipments:"
-msgid "Next"
-msgstr "Siguiente"
