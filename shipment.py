@@ -1,5 +1,7 @@
 # The COPYRIGHT file at the top level of this repository contains the full
 # copyright notices and license terms.
+from sql import Table
+from time import sleep
 from trytond.model import fields, ModelView
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Id
@@ -29,6 +31,31 @@ class ShipmentOut:
                         Id('stock', 'group_stock')),
                     },
                 })
+
+    @classmethod
+    def stock_move_locked(cls):
+        transaction = Transaction()
+        cursor = transaction.cursor
+
+        pg_activity = Table('pg_stat_activity')
+        pg_locks = Table('pg_locks')
+        pg_class = Table('pg_class')
+
+        cursor.execute(*pg_activity
+            .join(pg_locks, 'LEFT',
+                condition=(pg_activity.pid == pg_locks.pid))
+            .join(pg_class, 'LEFT',
+                condition=(pg_locks.relation == pg_class.oid))
+            .select(
+                pg_activity.pid,
+                where=(
+                    (pg_locks.mode == 'ExclusiveLock')
+                    &
+                    (pg_class.relname == 'stock_move')
+                    ),
+                )
+            )
+        return cursor.fetchall()
 
     @classmethod
     @ModelView.button
@@ -79,6 +106,8 @@ class ShipmentOut:
             logger.info(
                 'Scheduler Try Assign. Total: %s' % (len(shipments)))
 
+            while cls.stock_move_locked():
+                sleep(0.1)
             for s in shipments:
                 shipment = ShipmentOut(s.id)
                 if ShipmentOut.assign_try([shipment]):
