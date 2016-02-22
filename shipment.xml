@@ -11,7 +11,7 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
         </record>
 
         <record model="ir.action.act_window" id="act_shipment_out_autoassign">
-            <field name="name">Customer Shipments</field>
+            <field name="name">Pending Customer Shipments to Assign</field>
             <field name="res_model">stock.shipment.out</field>
             <field name="search_value"></field>
         </record>
