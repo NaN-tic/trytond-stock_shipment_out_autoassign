@@ -39,7 +39,7 @@ class Move:
         ShipmentOut = Pool().get('stock.shipment.out')
         Date_ = Pool().get('ir.date')
         Product = Pool().get('product.product')
-        cursor = Transaction().cursor
+        cursor = Transaction().connection.cursor()
 
         move = cls.__table__()
         shipment_in = ShipmentIn.__table__()
