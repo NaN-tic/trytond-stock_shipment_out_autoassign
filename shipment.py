@@ -106,7 +106,7 @@ class ShipmentOut:
                 shipments_to_assign = cls.browse(shipments_ids)
                 for s in shipments_to_assign:
                     cls.assign_try([s])
-                    Transaction().cursor.commit()
+                    Transaction().commit()
 
     @classmethod
     def assign_try_scheduler(cls, args=None):
