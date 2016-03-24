@@ -35,7 +35,7 @@ class ShipmentOut:
     @classmethod
     def stock_move_locked(cls):
         transaction = Transaction()
-        cursor = transaction.connection.cursor
+        cursor = transaction.connection.cursor()
 
         pg_activity = Table('pg_stat_activity')
         pg_locks = Table('pg_locks')
