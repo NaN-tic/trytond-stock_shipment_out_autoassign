@@ -145,7 +145,7 @@ class ShipmentOut:
                 shipment = ShipmentOut(s.id)
                 if ShipmentOut.assign_try([shipment]):
                     shipments_assigned.append(shipment)
-                Transaction().cursor.commit()
+                Transaction().commit()
 
             logger.info(
                 'End Scheduler Try Assign. Assigned: %s' % (len(shipments_assigned)))
