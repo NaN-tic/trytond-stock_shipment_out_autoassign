@@ -13,11 +13,11 @@ import logging
 
 __all__ = ['ShipmentOut', 'ShipmentOutAssignWizardStart',
     'ShipmentOutAssignWizard']
-__metaclass__ = PoolMeta
 logger = logging.getLogger(__name__)
 
 
 class ShipmentOut:
+    __metaclass__ = PoolMeta
     __name__ = 'stock.shipment.out'
 
     @classmethod
