@@ -62,18 +62,23 @@ class ShipmentOut:
         pool = Pool()
         Product = pool.get('product.product')
         Date = pool.get('ir.date')
+        Location = pool.get('stock.location')
 
         today = Date.today()
         product_ids = set()
-        location_ids = set()
-
+        locations = set()
         for shipment in shipments:
             for move in shipment.inventory_moves:
-                location_ids.add(move.from_location.id)
                 product_ids.add(move.product.id)
+                locations.add(move.from_location)
+
+        location_ids = [l.id for l in Location.search([
+                    ('parent', 'child_of', list(locations))
+                    ])]
+
         with Transaction().set_context(forecast=False, stock_date_end=today):
             pbl = Product.products_by_location(
-                    list(location_ids), list(product_ids), with_childs=True)
+                    list(location_ids), list(product_ids), with_childs=False)
         assignable_shipments = []
 
         for shipment in shipments:
