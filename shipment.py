@@ -152,14 +152,9 @@ class ShipmentOut:
 
             while cls.stock_move_locked():
                 sleep(0.1)
-            for s in shipments:
-                shipment = ShipmentOut(s.id)
-                if ShipmentOut.assign_try([shipment]):
-                    shipments_assigned.append(shipment)
-                Transaction().commit()
+            ShipmentOut.assign_try(shipments)
 
-            logger.info(
-                'End Scheduler Try Assign. Assigned: %s' % (len(shipments_assigned)))
+            logger.info('End Scheduler Try Assign.'
 
 
 class ShipmentOutAssignWizardStart(ModelView):
