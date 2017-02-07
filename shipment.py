@@ -154,7 +154,7 @@ class ShipmentOut:
                 sleep(0.1)
             ShipmentOut.assign_try(shipments)
 
-            logger.info('End Scheduler Try Assign.'
+            logger.info('End Scheduler Try Assign.')
 
 
 class ShipmentOutAssignWizardStart(ModelView):

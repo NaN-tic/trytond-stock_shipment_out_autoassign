@@ -1,1 +1,4 @@
+* Remove commit() when assign try shipments with cron
+* Stock configuration to try assign shipments in wait state
+
 Version 4.0.0 - 2016-05-03
