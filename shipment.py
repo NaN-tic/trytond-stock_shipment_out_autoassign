@@ -13,12 +13,12 @@ import logging
 
 __all__ = ['ShipmentOut', 'ShipmentOutAssignWizardStart',
     'ShipmentOutAssignWizard']
-__metaclass__ = PoolMeta
 logger = logging.getLogger(__name__)
 
 
 class ShipmentOut:
     __name__ = 'stock.shipment.out'
+    __metaclass__ = PoolMeta
 
     @classmethod
     def __setup__(cls):
@@ -103,10 +103,15 @@ class ShipmentOut:
 
     @classmethod
     def wait(cls, shipments):
+        Configuration = Pool().get('stock.configuration')
+
+        config = Configuration(1)
+
         shipments_ids = [s.id for s in shipments if s.state == 'draft']
         super(ShipmentOut, cls).wait(shipments)
 
-        if Transaction().context.get('assign_try', True) and shipments_ids:
+        if config.try_wait2assign and shipments_ids \
+                and Transaction().context.get('assign_try', True):
             with Transaction().set_context(_check_access=False):
                 shipments_to_assign = cls.browse(shipments_ids)
                 for s in shipments_to_assign:

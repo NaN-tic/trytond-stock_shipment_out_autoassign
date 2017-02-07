@@ -4,19 +4,17 @@
 from collections import OrderedDict
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
-
 from sql import Cast, Literal
 from sql.aggregate import Sum
 from sql.functions import Substring, Position
 from sql.operators import Like
 
-
 __all__ = ['Move']
-__metaclass__ = PoolMeta
 
 
 class Move:
     __name__ = 'stock.move'
+    __metaclass__ = PoolMeta
 
     @classmethod
     def do(cls, moves):

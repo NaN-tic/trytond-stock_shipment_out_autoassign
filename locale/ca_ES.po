@@ -2,6 +2,10 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "field:stock.configuration,try_wait2assign:"
+msgid "Try assign"
+msgstr "Intentar reservar"
+
 msgctxt "field:stock.shipment.out.assign.wizard.start,from_datetime:"
 msgid "From Date & Time"
 msgstr "Des de data i hora"
@@ -13,6 +17,10 @@ msgstr "ID"
 msgctxt "field:stock.shipment.out.assign.wizard.start,warehouse:"
 msgid "Warehouse"
 msgstr "Magatzem"
+
+msgctxt "help:stock.configuration,try_wait2assign:"
+msgid "Try assign shipments in wait state"
+msgstr "Intenta reservar albarans en l'estat en espera."
 
 msgctxt "model:ir.action,name:act_shipment_out_autoassign"
 msgid "Pending Customer Shipments to Assign"
