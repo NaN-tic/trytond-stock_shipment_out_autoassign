@@ -2,6 +2,10 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "field:stock.configuration,slice_try_assign:"
+msgid "Cron slice Try assign"
+msgstr "Bloques en la asignación en el cron"
+
 msgctxt "field:stock.configuration,try_wait2assign:"
 msgid "Try assign"
 msgstr "Intentar reservar"
@@ -17,6 +21,14 @@ msgstr "ID"
 msgctxt "field:stock.shipment.out.assign.wizard.start,warehouse:"
 msgid "Warehouse"
 msgstr "Almacén"
+
+msgctxt "help:stock.configuration,slice_try_assign:"
+msgid ""
+"Number of blocs of shipments to try assign before do the commit. If 0 or "
+"null it will be all."
+msgstr ""
+"Número de bloques de albaranes para hace el 'try assign' antes de hacer el "
+"commit. Si es 0 o null se hará todo de golpe."
 
 msgctxt "help:stock.configuration,try_wait2assign:"
 msgid "Try assign shipments in wait state"

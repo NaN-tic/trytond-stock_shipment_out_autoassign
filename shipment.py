@@ -4,10 +4,10 @@ from sql import Table
 from time import sleep
 from trytond.model import fields, ModelView
 from trytond.pool import Pool, PoolMeta
-from trytond.pyson import Eval, Id
-from trytond.pyson import PYSONEncoder
+from trytond.pyson import Eval, Id, PYSONEncoder
 from trytond.transaction import Transaction
 from trytond.wizard import Wizard, StateView, Button, StateAction
+from trytond.tools import reduce_ids, grouped_slice
 import datetime
 import logging
 
@@ -129,7 +129,9 @@ class ShipmentOut:
         Cron = pool.get('ir.cron')
         ModelData = pool.get('ir.model.data')
         ShipmentOut = pool.get('stock.shipment.out')
+        Configuration = Pool().get('stock.configuration')
 
+        config = Configuration(1)
         cron = Cron(ModelData.get_id('stock_shipment_out_autoassign',
                 'cron_shipment_out_assign_try_scheduler'))
         from_date = cron.next_call - Cron.get_delta(cron)
@@ -143,7 +145,6 @@ class ShipmentOut:
                 ('id', 'in', args),
                 )
 
-        shipments_assigned = []
         with Transaction().set_context(dblock=False):
             shipments = ShipmentOut.search(domain)
 
@@ -152,8 +153,10 @@ class ShipmentOut:
 
             while cls.stock_move_locked():
                 sleep(0.1)
-            ShipmentOut.assign_try(shipments)
-
+            slice_try_assign = config.slice_try_assign or len(shipments)
+            for sub_shipments in grouped_slice(shipments, slice_try_assign):
+                ShipmentOut.assign_try(sub_shipments)
+                Transaction().cursor.commit()
             logger.info('End Scheduler Try Assign.')
 
 
