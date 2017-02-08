@@ -11,7 +11,14 @@ class Configuration:
     __metaclass__ = PoolMeta
     try_wait2assign = fields.Boolean('Try assign',
         help="Try assign shipments in wait state")
+    slice_try_assign = fields.Integer('Cron slice Try assign',
+        help=("Number of blocs of shipments to try assign before do the "
+            "commit. If 0 or null it will be all."))
 
     @staticmethod
     def default_try_wait2assign():
         return True
+
+    @staticmethod
+    def default_slice_try_assign():
+        return 10

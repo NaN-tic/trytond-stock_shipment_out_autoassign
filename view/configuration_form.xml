@@ -6,5 +6,7 @@ copyright notices and license terms. -->
             position="after">
         <label name="try_wait2assign"/>
         <field name="try_wait2assign"/>
+        <label name="slice_try_assign"/>
+        <field name="slice_try_assign"/>
     </xpath>
 </data>
