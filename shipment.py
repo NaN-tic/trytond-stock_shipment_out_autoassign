@@ -156,7 +156,7 @@ class ShipmentOut:
             slice_try_assign = config.slice_try_assign or len(shipments)
             for sub_shipments in grouped_slice(shipments, slice_try_assign):
                 ShipmentOut.assign_try(sub_shipments)
-                Transaction().cursor.commit()
+                Transaction().commit()
             logger.info('End Scheduler Try Assign.')
 
 
