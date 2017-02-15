@@ -157,9 +157,10 @@ class ShipmentOut:
             blocs = 1
             len_ship = len(shipments)
             for sub_shipments in grouped_slice(shipments, slice_try_assign):
-                logger.info('Start bloc %s of %s.' % (blocs, len_ship/slice_try_assign))
-                ship = ShipmentOut.browse(sub_shipments)
-                ShipmentOut.assign_try(ship)
+                logger.info('Start bloc %s of %s.' % (
+                        blocs, len_ship/slice_try_assign))
+                ships = ShipmentOut.browse(sub_shipments)
+                ShipmentOut.assign_try(ships)
                 Transaction().commit()
                 logger.info('End bloc %s.' % blocs)
                 blocs += 1
