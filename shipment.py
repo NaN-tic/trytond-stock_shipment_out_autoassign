@@ -90,7 +90,7 @@ class ShipmentOut:
                     break
             else:
                 for m in shipment.inventory_moves:
-                    pbl[(move.from_location.id, m.product.id)] -= m.quantity
+                    pbl[(m.from_location.id, m.product.id)] -= m.quantity
                 assignable_shipments.append(shipment)
         return assignable_shipments
 
@@ -154,9 +154,16 @@ class ShipmentOut:
             while cls.stock_move_locked():
                 sleep(0.1)
             slice_try_assign = config.slice_try_assign or len(shipments)
+            blocs = 1
+            len_ship = len(shipments)
             for sub_shipments in grouped_slice(shipments, slice_try_assign):
-                ShipmentOut.assign_try(sub_shipments)
+                logger.info('Start bloc %s of %s.' % (
+                        blocs, len_ship/slice_try_assign))
+                ships = ShipmentOut.browse(sub_shipments)
+                ShipmentOut.assign_try(ships)
                 Transaction().commit()
+                logger.info('End bloc %s.' % blocs)
+                blocs += 1
             logger.info('End Scheduler Try Assign.')
 
 
