@@ -6,11 +6,10 @@ copyright notices and license terms. -->
             position="after">
         <label name="try_wait2assign"/>
         <field name="try_wait2assign"/>
-        <group name="cron_try_assign" colspan="4" col="4">
-            <label name="slice_try_assign"/>
-            <field name="slice_try_assign"/>
-            <label name="delta_cron_try_assign"/>
-            <field name="delta_cron_try_assign"/>
-        </group>
+        <newline/>
+        <label name="slice_try_assign"/>
+        <field name="slice_try_assign"/>
+        <label name="delta_cron_try_assign"/>
+        <field name="delta_cron_try_assign"/>
     </xpath>
 </data>
