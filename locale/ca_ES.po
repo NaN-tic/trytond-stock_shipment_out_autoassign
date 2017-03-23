@@ -3,7 +3,7 @@ msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
 msgctxt "field:stock.configuration,try_wait2assign:"
-msgid "Try assign"
+msgid "Try Assign"
 msgstr "Intentar reservar"
 
 msgctxt "field:stock.shipment.out.assign.wizard.start,from_datetime:"
@@ -61,3 +61,28 @@ msgstr "Següent"
 msgctxt "wizard_button:stock.shipment.out.assign.wizard,start,end:"
 msgid "Cancel"
 msgstr "Cancel·la"
+
+msgctxt "field:stock.configuration,slice_try_assign:"
+msgid "Cron Slice Try Assign"
+msgstr "Blocs en l'asignació en el cron"
+
+msgctxt "field:stock.configuration,delta_cron_try_assign:"
+msgid "Delta Cron Try Assign"
+msgstr "Delta en l'asignació del cron"
+
+
+msgctxt "help:stock.configuration,slice_try_assign:"
+msgid ""
+"Number of blocs of shipments to try assign before do the commit. If 0 or "
+"null it will be all."
+msgstr ""
+"Número de blocs d'albarans per fer el 'try assign' abans de fer el "
+"commit. Si és 0 o null es farà tot de cop."
+
+msgctxt "help:stock.configuration,delta_cron_try_assign:"
+msgid ""
+"Number of minutes to substract for the selection of shipment outs, to do "
+"the try assign."
+msgstr ""
+"Número de minuts a restar per la selecció dels albarans de sortida, "
+"per fer el 'try assign'."

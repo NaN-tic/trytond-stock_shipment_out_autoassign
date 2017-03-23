@@ -3,8 +3,12 @@ msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
 msgctxt "field:stock.configuration,slice_try_assign:"
-msgid "Cron slice Try assign"
+msgid "Cron Slice Try Assign"
 msgstr "Bloques en la asignación en el cron"
+
+msgctxt "field:stock.configuration,delta_cron_try_assign:"
+msgid "Delta Cron Try Assign"
+msgstr "Delta en la asignación del cron"
 
 msgctxt "field:stock.configuration,try_wait2assign:"
 msgid "Try assign"
@@ -29,6 +33,14 @@ msgid ""
 msgstr ""
 "Número de bloques de albaranes para hace el 'try assign' antes de hacer el "
 "commit. Si es 0 o null se hará todo de golpe."
+
+msgctxt "help:stock.configuration,delta_cron_try_assign:"
+msgid ""
+"Number of minutes to substract for the selection of shipment outs, to do "
+"the try assign."
+msgstr ""
+"Número de minutos a restar para la selección de los albaranes de salida, "
+"para hace el 'try assign'."
 
 msgctxt "help:stock.configuration,try_wait2assign:"
 msgid "Try assign shipments in wait state"

@@ -2,6 +2,7 @@
 # copyright notices and license terms.
 from sql import Table
 from time import sleep
+from dateutil.relativedelta import relativedelta
 from trytond.model import fields, ModelView
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Id, PYSONEncoder
@@ -133,7 +134,8 @@ class ShipmentOut:
         config = Configuration(1)
         cron = Cron(ModelData.get_id('stock_shipment_out_autoassign',
                 'cron_shipment_out_assign_try_scheduler'))
-        from_date = cron.next_call - Cron.get_delta(cron)
+        from_date = cron.next_call - relativedelta(
+            minutes=config.delta_cron_try_assign),
 
         domain = [
             ('state', '=', 'waiting'),
