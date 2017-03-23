@@ -134,8 +134,8 @@ class ShipmentOut:
         config = Configuration(1)
         cron = Cron(ModelData.get_id('stock_shipment_out_autoassign',
                 'cron_shipment_out_assign_try_scheduler'))
-        from_date = cron.next_call - relativedelta(
-            minutes=config.delta_cron_try_assign),
+        delta = relativedelta(minutes=config.delta_cron_try_assign)
+        from_date = cron.next_call - delta
 
         domain = [
             ('state', '=', 'waiting'),
