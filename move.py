@@ -17,12 +17,18 @@ class Move:
     __metaclass__ = PoolMeta
 
     @classmethod
+    def get_autoassign_mode(cls):
+        return 'in'
+
+    @classmethod
     def do(cls, moves):
         ShipmentIn = Pool().get('stock.shipment.in')
         super(Move, cls).do(moves)
-        in_moves = [m.id for m in moves if isinstance(m.shipment, ShipmentIn)]
-        if in_moves:
-            cls.autoassign_out_moves(in_moves)
+        autoassign_mode = cls.get_autoassign_mode()
+        if autoassign_mode == 'in':
+            in_moves = [m.id for m in moves if isinstance(m.shipment, ShipmentIn)]
+            if in_moves:
+                cls.autoassign_out_moves(in_moves)
 
     @classmethod
     def autoassign_out_moves(cls, move_ids):
