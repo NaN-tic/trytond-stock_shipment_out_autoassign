@@ -11,21 +11,33 @@ class Configuration:
     __metaclass__ = PoolMeta
     try_wait2assign = fields.Boolean('Try Assign',
         help="Try assign shipments in wait state")
-    slice_try_assign = fields.Integer('Cron Slice Try Assign',
-        help=("Number of blocs of shipments to try assign before do the "
-            "commit. If 0 or null it will be all."))
-    delta_cron_try_assign = fields.Integer('Delta Cron Try Assign',
-        help=("Number of minutes to substract for the selection of shipment "
-            "outs, to do the try assign."))
+    blocks_try_assign = fields.Integer('Cron Blocks Try Assign',
+        help=("Number of shipments to try assign toghether. If 0 or "
+            "null it will be all shipments."))
+    repeat_blocks_try_assign = fields.Integer('Cron Repeat Blocks Try Assign',
+        help=("Number of blocks to try assign before do the commit. If 0 or "
+            "null it will be all blocks in 1 iteration."))
+    next_id_try_assign = fields.Integer('Cron Try Assign Next ID',
+        help="Next ID to use in the try assign.")
+    last_id_try_assign = fields.Integer('Cron Try Assign Last ID',
+        readonly=True, help="Last ID in the try assign iteration.")
 
     @staticmethod
     def default_try_wait2assign():
         return True
 
     @staticmethod
-    def default_slice_try_assign():
-        return 10
+    def default_blocks_cron_try_assign():
+        return 500
 
     @staticmethod
-    def default_delta_cron_try_assign():
-        return 30
+    def default_repeat_blocks_try_assign():
+        return 1
+
+    @staticmethod
+    def default_next_id_try_assign():
+        return 0
+
+    @staticmethod
+    def default_last_id_try_assign():
+        return 0

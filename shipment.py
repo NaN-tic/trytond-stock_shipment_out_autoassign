@@ -34,54 +34,39 @@ class ShipmentOut:
                 })
 
     @classmethod
-    def stock_move_locked(cls):
-        transaction = Transaction()
-        cursor = transaction.cursor
-
-        pg_activity = Table('pg_stat_activity')
-        pg_locks = Table('pg_locks')
-        pg_class = Table('pg_class')
-
-        cursor.execute(*pg_activity
-            .join(pg_locks, 'LEFT',
-                condition=(pg_activity.pid == pg_locks.pid))
-            .join(pg_class, 'LEFT',
-                condition=(pg_locks.relation == pg_class.oid))
-            .select(
-                pg_activity.pid,
-                where=(
-                    (pg_locks.mode == 'ExclusiveLock')
-                    &
-                    (pg_class.relname == 'stock_move')
-                    ),
-                )
-            )
-        return cursor.fetchall()
-
-    @classmethod
-    def get_assignable(cls, shipments):
+    def get_assignable(cls, shipments, date_start=None):
         pool = Pool()
-        Product = pool.get('product.product')
         Date = pool.get('ir.date')
+        Product = pool.get('product.product')
         Location = pool.get('stock.location')
+        ShipmentOut = pool.get('stock.shipment.out')
 
         today = Date.today()
         product_ids = set()
-        locations = set()
+        location_ids = set()
         for shipment in shipments:
             for move in shipment.inventory_moves:
                 product_ids.add(move.product.id)
-                locations.add(move.from_location)
+                location_ids.add(move.from_location.id)
 
-        location_ids = [l.id for l in Location.search([
-                    ('parent', 'child_of', list(locations))
-                    ])]
+        pbl = None
+        if location_ids:
+            context = {
+                'locations': list(location_ids),
+                'stock_assign': True,
+                'forecast': False,
+                'stock_date_end': today,
+                'check_access': False,
+                }
+            if date_start:
+                context['stock_date_start'] = date_start
+            with Transaction().set_context(**context):
+                pbl = Product.products_by_location(
+                    list(location_ids),
+                    list(product_ids),
+                    with_childs=True)
 
-        with Transaction().set_context(forecast=False, stock_date_end=today):
-            pbl = Product.products_by_location(
-                    list(location_ids), list(product_ids), with_childs=False)
         assignable_shipments = []
-
         for shipment in shipments:
             for move in shipment.inventory_moves:
                 if ((move.from_location.id, move.product.id) not in pbl
@@ -120,6 +105,25 @@ class ShipmentOut:
                     Transaction().cursor.commit()
 
     @classmethod
+    def get_shipment_block(cls, domain, config):
+        limit = config.blocks_try_assign
+        shipments = cls.search(domain + [
+            ('id', '<=', config.last_id_try_assign),
+            ('id', '>', config.next_id_try_assign),
+            ], order=[('id','asc')], limit=limit)
+        limit = limit - len(shipments)
+        if shipments and shipments[-1].id < config.last_id_try_assign:
+            config.next_id_try_assign = shipments[-1].id
+        else:
+            config.next_id_try_assign = 0
+            all_shipments = cls.search(domain, order=[('id','asc')])
+            if all_shipments:
+                config.last_id_try_assign = all_shipments[-1].id
+        if limit > 0:
+            shipments += cls.get_shipment_block(domain, config)
+        return shipments
+
+    @classmethod
     def assign_try_scheduler(cls, args=None):
         '''
         This method is intended to be called from ir.cron
@@ -133,12 +137,9 @@ class ShipmentOut:
         config = Configuration(1)
         cron = Cron(ModelData.get_id('stock_shipment_out_autoassign',
                 'cron_shipment_out_assign_try_scheduler'))
-        delta = relativedelta(minutes=config.delta_cron_try_assign)
-        from_date = cron.next_call - delta
 
         domain = [
             ('state', '=', 'waiting'),
-            ('write_date', '>=', from_date),
             ]
         if args:
             domain.append(
@@ -146,27 +147,23 @@ class ShipmentOut:
                 )
 
         with Transaction().set_context(dblock=False):
-            shipments = cls.search(domain)
-
-            logger.info(
-                'Scheduler Try Assign. Total: %s [%s]' % (len(shipments),
-                        domain))
-
-            while cls.stock_move_locked():
-                sleep(0.1)
-            slice_try_assign = config.slice_try_assign or len(shipments)
-            blocs = 1
-            len_ship = len(shipments)
-            if len_ship:
-                for sub_shipments in grouped_slice(shipments, slice_try_assign):
-                    logger.info('Start bloc %s of %s.' % (
-                            blocs, len_ship/slice_try_assign))
-                    ships = cls.browse(sub_shipments)
-                    cls.assign_try(ships)
-                    Transaction().cursor.commit()
-                    logger.info('End bloc %s.' % blocs)
-                    blocs += 1
-            logger.info('End Scheduler Try Assign.')
+            if (not config.last_id_try_assign or
+                    config.last_id_try_assign <= config.next_id_try_assign):
+                all_shipments = cls.search(domain, order=[('id','asc')])
+                config.last_id_try_assign = (all_shipments[-1].id
+                    if all_shipments else 0)
+            for repeat_blocks in range(config.repeat_blocks_try_assign):
+                shipments = cls.get_shipment_block(domain, config)
+                if not shipments:
+                    continue
+                config.save()
+                logger.info('Start block %s of %s.' % (str(repeat_blocks + 1),
+                        config.repeat_blocks_try_assign))
+                ships = cls.browse(shipments)
+                cls.assign_try(ships)
+                Transaction().cursor.commit()
+                logger.info('End block %s.' % str(repeat_blocks + 1))
+        logger.info('End Scheduler Try Assign.')
 
 
 class ShipmentOutAssignWizardStart(ModelView):
